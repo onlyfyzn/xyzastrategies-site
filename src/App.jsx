@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const CALENDLY_URL = "https://calendly.com/fyzn/xyza-strategies-discovery-call";
 
@@ -558,6 +559,7 @@ export default function App() {
       <CTASection />
       <Footer />
       <Analytics />
+      <SpeedInsights />
     </>
   );
 }
