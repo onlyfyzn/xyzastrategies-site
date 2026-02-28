@@ -103,12 +103,13 @@ function Nav() {
       transition: "all 0.4s ease",
     }}>
       <a href="#top" onClick={e => smoothScroll(e, "top")} style={{ fontFamily: "var(--serif)", fontSize: 22, color: C.dark, textDecoration: "none", letterSpacing: "-0.02em" }}>Faizaan.</a>
-      <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+      <div className="nav-links-desktop" style={{ display: "flex", gap: 32, alignItems: "center" }}>
         {["Work", "Services", "About"].map(t => (
           <a key={t} href={`#${t.toLowerCase()}`} onClick={e => smoothScroll(e, t.toLowerCase())} className="nav-link" style={{ fontFamily: "var(--sans)", fontSize: 13, color: "#666", textDecoration: "none", letterSpacing: "0.06em", textTransform: "uppercase" }}>{t}</a>
         ))}
         <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontFamily: "var(--sans)", fontSize: 13, color: C.warm, background: C.dark, padding: "10px 24px", borderRadius: 100, textDecoration: "none", letterSpacing: "0.04em", textTransform: "uppercase" }}>Book a Call</a>
       </div>
+      <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className="btn-primary nav-mobile-cta" style={{ fontFamily: "var(--sans)", fontSize: 12, color: C.warm, background: C.dark, padding: "8px 20px", borderRadius: 100, textDecoration: "none", letterSpacing: "0.04em", textTransform: "uppercase" }}>Book a Call</a>
     </nav>
   );
 }
@@ -271,7 +272,7 @@ function Hero() {
           <a href="#work" onClick={e => smoothScroll(e, "work")} className="btn-outline" style={{ fontFamily: "var(--sans)", fontSize: 14, color: C.dark, background: "transparent", padding: "14px 36px", borderRadius: 100, textDecoration: "none", letterSpacing: "0.04em", border: "1px solid rgba(0,0,0,0.15)" }}>See My Work</a>
         </div>
       </div>
-      <div style={{ ...t(0.8), position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32, width: "100%", marginTop: "auto", paddingTop: 80, borderTop: "1px solid rgba(0,0,0,0.06)", textAlign: "center" }}>
+      <div className="hero-stats" style={{ ...t(0.8), position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32, width: "100%", marginTop: "auto", paddingTop: 80, borderTop: "1px solid rgba(0,0,0,0.06)", textAlign: "center" }}>
         {STATS.map((s, i) => (
           <div key={i}>
             <div style={{ fontFamily: "var(--serif)", fontSize: 36, color: C.dark, letterSpacing: "-0.02em" }}>{s.value}</div>
@@ -339,19 +340,19 @@ function WorkSection() {
           Results that speak <span style={{ fontStyle: "italic" }}>for themselves.</span>
         </h2>
       </FadeIn>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginBottom: 24 }}>
+      <div className="work-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, marginBottom: 24 }}>
         {FEATURED_CASES.slice(0, 3).map((cs, i) => <FadeIn key={i} delay={i * 0.08}><CaseCard cs={cs} index={i} /></FadeIn>)}
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24, marginBottom: 24 }}>
+      <div className="work-grid-2" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24, marginBottom: 24 }}>
         {FEATURED_CASES.slice(3, 5).map((cs, i) => <FadeIn key={i + 3} delay={(i + 3) * 0.08}><CaseCard cs={cs} index={i + 3} /></FadeIn>)}
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
+      <div className="work-grid-2" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
         {FEATURED_CASES.slice(5, 7).map((cs, i) => <FadeIn key={i + 5} delay={(i + 5) * 0.08}><CaseCard cs={cs} index={i + 5} /></FadeIn>)}
       </div>
       <FadeIn delay={0.15}>
         <div style={{ marginTop: 64, paddingTop: 48, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
           <p style={{ fontFamily: "var(--sans)", fontSize: 12, letterSpacing: "0.1em", textTransform: "uppercase", color: "#999", margin: "0 0 28px" }}>Also worked with</p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 28, alignItems: "center" }}>
+          <div className="avatar-row" style={{ display: "flex", flexWrap: "wrap", gap: 28, alignItems: "center" }}>
             {AVATAR_ROW.map((p, i) => (
               <a key={i} href={p.url} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", transition: "opacity 0.2s" }}
                 onMouseEnter={e => e.currentTarget.style.opacity = 0.7}
@@ -362,7 +363,7 @@ function WorkSection() {
                 ) : (
                   <div style={{ width: 44, height: 44, borderRadius: "50%", background: C.dark, color: C.warm, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--sans)", fontSize: 12, fontWeight: 500, letterSpacing: "0.04em" }}>{p.initials}</div>
                 )}
-                <span style={{ fontFamily: "var(--sans)", fontSize: 14, color: "#666" }}>{p.name}</span>
+                <span className="avatar-name" style={{ fontFamily: "var(--sans)", fontSize: 14, color: "#666" }}>{p.name}</span>
               </a>
             ))}
           </div>
@@ -381,7 +382,7 @@ function ServicesSection() {
         <SectionLabel>Services</SectionLabel>
         <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(36px, 4.5vw, 56px)", fontWeight: 400, letterSpacing: "-0.02em", color: C.dark, margin: "0 0 64px", lineHeight: 1.1 }}>What I <span style={{ fontStyle: "italic" }}>build</span> for you.</h2>
       </FadeIn>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
+      <div className="services-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
         <FadeIn delay={0.05}>
           <div onMouseEnter={() => setHovered(0)} onMouseLeave={() => setHovered(null)} style={{
             padding: 48, borderRadius: 16, border: "1px solid rgba(0,0,0,0.06)",
@@ -535,9 +536,19 @@ export default function App() {
         .btn-outline { transition: border-color 0.2s ease; }
         .btn-outline:hover { border-color: rgba(0,0,0,0.4) !important; }
         @media (max-width: 900px) {
-.about-grid { grid-template-columns: 1fr !important; }
+          .about-grid { grid-template-columns: 1fr !important; }
           #services > div:last-child { grid-template-columns: 1fr !important; }
+          .work-grid-3, .work-grid-2 { grid-template-columns: 1fr !important; }
+          .services-grid { grid-template-columns: 1fr !important; }
         }
+        @media (max-width: 640px) {
+          .nav-links-desktop { display: none !important; }
+          .nav-mobile-cta { display: flex !important; }
+          .hero-stats { grid-template-columns: 1fr !important; gap: 24px !important; text-align: left !important; }
+          .avatar-row { gap: 20px !important; }
+          .avatar-row .avatar-name { display: none; }
+        }
+        .nav-mobile-cta { display: none; }
       `}</style>
       <Nav />
       <Hero />
