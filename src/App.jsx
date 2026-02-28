@@ -49,11 +49,13 @@ const FEATURED_CASES = [
 ];
 
 const AVATAR_ROW = [
-  { name: "Kinson La", initials: "KL", url: "https://www.instagram.com/buildyourecombrand/", img: null },
-  { name: "TheTradingGeek", initials: "BG", url: "https://www.instagram.com/brad.goh/", img: null },
-  { name: "Symone Beez", initials: "SB", url: "https://www.instagram.com/symonebeez/", img: null },
-  { name: "Jimmy Farley", initials: "JF", url: "https://www.instagram.com/jimpapi/", img: null },
-  { name: "AJ Currency", initials: "AJ", url: "https://www.instagram.com/aj.currency/", img: null },
+  { name: "Kinson La", initials: "KL", url: "https://www.instagram.com/buildyourecombrand/", img: "/avatars/kinson.jpg" },
+  { name: "TheTradingGeek", initials: "BG", url: "https://www.instagram.com/brad.goh/", img: "/avatars/brad.jpg" },
+  { name: "Symone Beez", initials: "SB", url: "https://www.instagram.com/symonebeez/", img: "/avatars/symone.jpg" },
+  { name: "Jimmy Farley", initials: "JF", url: "https://www.instagram.com/jimpapi/", img: "/avatars/jimmy.jpg" },
+  { name: "AJ Currency", initials: "AJ", url: "https://www.instagram.com/aj.currency/", img: "/avatars/aj.jpg" },
+  { name: "Jay Kara", initials: "JK", url: "https://www.instagram.com/jaykarafit/", img: "/avatars/jaykara.jpg" },
+  { name: "Frankie Alvarado", initials: "FA", url: "https://www.instagram.com/thelabootybuilder/", img: "/avatars/frankie.jpg" },
 ];
 
 const SERVICE_1_BULLETS = [
