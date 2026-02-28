@@ -245,7 +245,7 @@ function HeroBgAnimation() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }} />;
+  return <canvas ref={canvasRef} style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "100vw", height: "100%", pointerEvents: "none", zIndex: 0 }} />;
 }
 
 function Hero() {
@@ -284,14 +284,29 @@ function SectionLabel({ children }) {
   return <p style={{ fontFamily: "var(--sans)", fontSize: 12, letterSpacing: "0.14em", textTransform: "uppercase", color: C.accent, margin: "0 0 16px" }}>{children}</p>;
 }
 
-function CaseCard({ cs, index }) {
-  const [hovered, setHovered] = useState(false);
-  const ClientName = cs.url ? (
-    <a href={cs.url} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none", borderBottom: "1px solid rgba(0,0,0,0.1)", transition: "border-color 0.2s" }}
+function LinkedName({ href, children }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none", borderBottom: "1px solid rgba(0,0,0,0.1)", transition: "border-color 0.2s" }}
       onMouseEnter={e => e.target.style.borderColor = C.accent}
       onMouseLeave={e => e.target.style.borderColor = "rgba(0,0,0,0.1)"}
-    >{cs.client}</a>
-  ) : cs.client;
+    >{children}</a>
+  );
+}
+
+function CaseCard({ cs, index }) {
+  const [hovered, setHovered] = useState(false);
+  let ClientName;
+  if (cs.url2 && cs.client.includes(" / ")) {
+    const parts = cs.client.split(" / ");
+    ClientName = <><LinkedName href={cs.url}>{parts[0]}</LinkedName>{" / "}<LinkedName href={cs.url2}>{parts[1]}</LinkedName></>;
+  } else if (cs.url2 && cs.client.includes(" & ")) {
+    const parts = cs.client.split(" & ");
+    ClientName = <><LinkedName href={cs.url}>{parts[0]}</LinkedName>{" & "}<LinkedName href={cs.url2}>{parts[1]}</LinkedName></>;
+  } else if (cs.url) {
+    ClientName = <LinkedName href={cs.url}>{cs.client}</LinkedName>;
+  } else {
+    ClientName = cs.client;
+  }
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} style={{
       background: "#fff", borderRadius: 16, padding: "36px 32px",
