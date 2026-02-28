@@ -110,26 +110,165 @@ function Nav() {
   );
 }
 
+function HeroBgAnimation() {
+  const canvasRef = useRef(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let animId;
+    let w, h;
+    const dpr = window.devicePixelRatio || 1;
+
+    function resize() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      w = rect.width;
+      h = rect.height;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    const NODE_COUNT = 28;
+    const nodes = Array.from({ length: NODE_COUNT }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.0003,
+      vy: (Math.random() - 0.5) * 0.0003,
+      r: Math.random() * 3 + 1.2,
+      phase: Math.random() * Math.PI * 2,
+    }));
+
+    const PARTICLE_COUNT = 55;
+    const particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.00015,
+      vy: -Math.random() * 0.00025 - 0.00008,
+      r: Math.random() * 1.5 + 0.3,
+      alpha: Math.random() * 0.35 + 0.05,
+      phase: Math.random() * Math.PI * 2,
+    }));
+
+    let time = 0;
+
+    function draw() {
+      time += 0.006;
+      ctx.clearRect(0, 0, w, h);
+
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i];
+        a.x += a.vx + Math.sin(time + a.phase) * 0.00015;
+        a.y += a.vy + Math.cos(time * 0.7 + a.phase) * 0.00015;
+        if (a.x < 0 || a.x > 1) a.vx *= -1;
+        if (a.y < 0 || a.y > 1) a.vy *= -1;
+        a.x = Math.max(0, Math.min(1, a.x));
+        a.y = Math.max(0, Math.min(1, a.y));
+
+        for (let j = i + 1; j < nodes.length; j++) {
+          const b = nodes[j];
+          const dx = (a.x - b.x) * w;
+          const dy = (a.y - b.y) * h;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const maxDist = 220;
+          if (dist < maxDist) {
+            const alpha = (1 - dist / maxDist) * 0.09;
+            ctx.beginPath();
+            ctx.moveTo(a.x * w, a.y * h);
+            ctx.lineTo(b.x * w, b.y * h);
+            ctx.strokeStyle = `rgba(184, 160, 128, ${alpha})`;
+            ctx.lineWidth = 0.7;
+            ctx.stroke();
+          }
+        }
+      }
+
+      for (const n of nodes) {
+        const pulse = 1 + Math.sin(time * 2 + n.phase) * 0.3;
+        const glow = ctx.createRadialGradient(n.x * w, n.y * h, 0, n.x * w, n.y * h, n.r * 5 * pulse);
+        glow.addColorStop(0, "rgba(184, 160, 128, 0.2)");
+        glow.addColorStop(1, "rgba(184, 160, 128, 0)");
+        ctx.beginPath();
+        ctx.arc(n.x * w, n.y * h, n.r * 5 * pulse, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(n.x * w, n.y * h, n.r * pulse, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(184, 160, 128, ${0.4 + Math.sin(time + n.phase) * 0.15})`;
+        ctx.fill();
+      }
+
+      for (const p of particles) {
+        p.x += p.vx + Math.sin(time * 1.5 + p.phase) * 0.00008;
+        p.y += p.vy;
+        if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
+        if (p.x < -0.05 || p.x > 1.05) p.vx *= -1;
+        const a = p.alpha * (0.6 + Math.sin(time * 3 + p.phase) * 0.4);
+        ctx.beginPath();
+        ctx.arc(p.x * w, p.y * h, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(184, 160, 128, ${a})`;
+        ctx.fill();
+      }
+
+      const cx = w * 0.5, cy = h * 0.45;
+      const rx = w * 0.28, ry = h * 0.14;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, time * 0.12, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(184, 160, 128, 0.05)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx * 0.55, ry * 1.6, -time * 0.08, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(184, 160, 128, 0.035)";
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx * 1.3, ry * 0.7, time * 0.05, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(184, 160, 128, 0.025)";
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+
+      animId = requestAnimationFrame(draw);
+    }
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 0 }} />;
+}
+
 function Hero() {
   const [loaded, setLoaded] = useState(false);
   useEffect(() => { requestAnimationFrame(() => setLoaded(true)); }, []);
   const t = (d) => ({ opacity: loaded ? 1 : 0, transform: loaded ? "translateY(0)" : "translateY(40px)", transition: `opacity 1s cubic-bezier(.22,1,.36,1) ${d}s, transform 1s cubic-bezier(.22,1,.36,1) ${d}s` });
   return (
-    <section id="top" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: "120px clamp(24px, 5vw, 80px) 80px" }}>
-      <div style={{ maxWidth: 900 }}>
+    <section id="top" style={{ position: "relative", minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: "120px clamp(24px, 5vw, 80px) 80px", overflow: "hidden" }}>
+      <HeroBgAnimation />
+      <div style={{ position: "relative", zIndex: 1, textAlign: "center", maxWidth: 820 }}>
         <p style={{ ...t(0.1), fontFamily: "var(--sans)", fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase", color: "#999", marginBottom: 24 }}>Founder Branding · Content Systems · Growth Strategy</p>
-        <h1 style={{ ...t(0.25), fontFamily: "var(--serif)", fontSize: "clamp(48px, 7vw, 96px)", fontWeight: 400, lineHeight: 1.05, letterSpacing: "-0.03em", color: C.dark, margin: 0 }}>
+        <h1 style={{ ...t(0.25), fontFamily: "var(--serif)", fontSize: "clamp(48px, 6.5vw, 88px)", fontWeight: 400, lineHeight: 1.05, letterSpacing: "-0.03em", color: C.dark, margin: 0 }}>
           I turn founders into<br />brands that <span style={{ fontStyle: "italic", color: C.accent }}>compound.</span>
         </h1>
-        <p style={{ ...t(0.45), fontFamily: "var(--sans)", fontSize: 18, lineHeight: 1.7, color: "#666", maxWidth: 580, marginTop: 32 }}>
+        <p style={{ ...t(0.45), fontFamily: "var(--sans)", fontSize: 18, lineHeight: 1.7, color: "#666", maxWidth: 600, margin: "32px auto 0" }}>
           I help founders and entrepreneurs build personal brands that attract deals, talent, and opportunities — through content systems, positioning, and marketing infrastructure engineered to scale.
         </p>
-        <div style={{ ...t(0.6), display: "flex", gap: 16, marginTop: 40, flexWrap: "wrap" }}>
+        <div style={{ ...t(0.6), display: "flex", gap: 16, marginTop: 40, flexWrap: "wrap", justifyContent: "center" }}>
           <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontFamily: "var(--sans)", fontSize: 14, color: C.warm, background: C.dark, padding: "14px 36px", borderRadius: 100, textDecoration: "none", letterSpacing: "0.04em" }}>Work With Me</a>
           <a href="#work" onClick={e => smoothScroll(e, "work")} className="btn-outline" style={{ fontFamily: "var(--sans)", fontSize: 14, color: C.dark, background: "transparent", padding: "14px 36px", borderRadius: 100, textDecoration: "none", letterSpacing: "0.04em", border: "1px solid rgba(0,0,0,0.15)" }}>See My Work</a>
         </div>
       </div>
-      <div style={{ ...t(0.8), display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32, marginTop: "auto", paddingTop: 80, borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+      <div style={{ ...t(0.8), position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32, width: "100%", marginTop: "auto", paddingTop: 80, borderTop: "1px solid rgba(0,0,0,0.06)", textAlign: "center" }}>
         {STATS.map((s, i) => (
           <div key={i}>
             <div style={{ fontFamily: "var(--serif)", fontSize: 36, color: C.dark, letterSpacing: "-0.02em" }}>{s.value}</div>
@@ -378,7 +517,7 @@ export default function App() {
         .btn-outline { transition: border-color 0.2s ease; }
         .btn-outline:hover { border-color: rgba(0,0,0,0.4) !important; }
         @media (max-width: 900px) {
-          .about-grid { grid-template-columns: 1fr !important; }
+.about-grid { grid-template-columns: 1fr !important; }
           #services > div:last-child { grid-template-columns: 1fr !important; }
         }
       `}</style>
