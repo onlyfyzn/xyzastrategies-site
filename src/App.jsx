@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { Analytics } from "@vercel/analytics/react";
 
 const CALENDLY_URL = "https://calendly.com/fyzn/xyza-strategies-discovery-call";
 
@@ -455,14 +454,10 @@ function AboutSection() {
         </FadeIn>
         <FadeIn delay={0.15}>
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-            <div style={{
-              width: "100%", aspectRatio: "1", borderRadius: 16,
-              background: `linear-gradient(145deg, ${C.dark} 0%, #2a2a2a 100%)`,
-              display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 8,
-            }}>
-              <span style={{ fontFamily: "var(--serif)", fontSize: 48, color: C.accent, fontStyle: "italic" }}>F</span>
-              <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "rgba(252,250,247,0.35)", letterSpacing: "0.1em", textTransform: "uppercase" }}>Your photo here</span>
-            </div>
+            <img src="/faizaan.jpeg" alt="Faizaan" style={{
+              width: "100%", aspectRatio: "3/4", borderRadius: 16, objectFit: "cover", objectPosition: "center top",
+              display: "block",
+            }} />
             <div style={{ background: C.dark, borderRadius: 16, padding: "36px 32px" }}>
               {SIDEBAR_FACTS.map((item, i) => (
                 <div key={i} style={{
@@ -557,7 +552,6 @@ export default function App() {
       <AboutSection />
       <CTASection />
       <Footer />
-      <Analytics />
     </>
   );
 }
